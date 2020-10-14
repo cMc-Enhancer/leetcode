@@ -1,6 +1,8 @@
 package com.example.leetCode;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 public class FindCommonCharacters {
 
@@ -9,30 +11,27 @@ public class FindCommonCharacters {
             return Collections.emptyList();
         }
 
-        Map<Character, Integer> counter = new HashMap<>();
+        int[] counter = new int[26];
         for (int i = 0; i < 26; i++) {
-            counter.put((char) ((int) 'a' + i), Integer.MAX_VALUE);
+            counter[i] = Integer.MAX_VALUE;
         }
 
         for (String s : A) {
-            Map<Character, Integer> characterCountMap = new HashMap<>();
+            int[] characterCountMap = new int[26];
             for (char c : s.toCharArray()) {
-                characterCountMap.putIfAbsent(c, 0);
-                characterCountMap.put(c, characterCountMap.get(c) + 1);
+                int charIndex = (int) c - (int) 'a';
+                characterCountMap[charIndex]++;
             }
 
             for (int i = 0; i < 26; i++) {
-                char c = (char) ((int) 'a' + i);
-                counter.put(c, Math.min(counter.get(c), characterCountMap.getOrDefault(c, 0)));
+                counter[i] = Math.min(counter[i], characterCountMap[i]);
             }
         }
 
         List<String> result = new LinkedList<>();
-        for (Map.Entry<Character, Integer> e : counter.entrySet()) {
-            if (e.getValue() > 0) {
-                for (Integer i = 0; i < e.getValue(); i++) {
-                    result.add(e.getKey().toString());
-                }
+        for (int i = 0; i < counter.length; i++) {
+            for (int j = 0; j < counter[i]; j++) {
+                result.add(String.valueOf((char) ((int) 'a' + i)));
             }
         }
         return result;
