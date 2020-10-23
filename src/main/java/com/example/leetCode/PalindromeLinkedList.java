@@ -1,16 +1,24 @@
 package com.example.leetCode;
 
 public class PalindromeLinkedList {
+
     public boolean isPalindrome(ListNode head) {
-        ListNode mid = findMid(head);
-        ListNode reversedHead = reverse(mid);
-        while (reversedHead != null) {
-            if (reversedHead.val != head.val) {
+        if (head == null || head.next == null) {
+            return true;
+        }
+
+        ListNode mid = findMidLeft(head);
+        ListNode reversedHead = reverse(mid.next);
+        ListNode tmp = reversedHead;
+        while (tmp != null) {
+            if (tmp.val != head.val) {
                 return false;
             }
-            reversedHead = reversedHead.next;
+            tmp = tmp.next;
             head = head.next;
         }
+
+        mid.next = reverse(reversedHead);
 
         return true;
     }
@@ -18,14 +26,14 @@ public class PalindromeLinkedList {
     /**
      * 1. Count <= 1, return head
      * 2. Count == odd, return mid
-     * 3. Count == even, return (count/2 + 1)th
+     * 3. Count == even, return (count/2)th
      */
-    private ListNode findMid(ListNode head) {
+    private ListNode findMidLeft(ListNode head) {
         if (head == null || head.next == null) {
             return head;
         }
         ListNode slow = head, fast = head;
-        while (fast != null && fast.next != null) {
+        while (fast.next != null && fast.next.next != null) {
             slow = slow.next;
             fast = fast.next.next;
         }
